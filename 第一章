@@ -1,0 +1,86 @@
+N根棍子组成三角形问题
+
+输入
+n = 5
+a = {2,3,4,5,10}
+
+n = 5
+a = {4,5,10,20}
+
+输出
+12（选择3、4、5）
+
+0
+
+
+算法
+//输入
+int n, a[MAX_N];
+
+void solve()
+{
+  int ans = 0;//答案
+  
+  //让i<j<k 不重复选择棍子
+  for (int i = 0; i < n; i++)
+  {
+    for(int j = i + 1; j < n; j++)
+    {
+      for(int k = j + 1; k < n; k++)
+      {
+        int len = a[i] + a[j] +a[k];//周长
+        int ma = max(a[i], max(a[j], a[k]));//最长边
+        int rest = len - ma;//其余两根棍子的长度之和
+        
+        if (ma < rest)
+        {
+          //如果可以构成三角形 更新答案
+          ans = max(ans, len);
+        }
+      }
+    }
+  }
+  
+  //输出
+  printf("%d\n", ans);
+}
+
+
+
+
+
+
+POJ NO. 1852-----------Ants
+
+输入
+L = 10
+n = 3
+x = {2,6,7}
+
+输出
+min = 4
+max = 8
+
+算法
+//输入
+int L, n;
+int x[MAX_N]
+
+void solve()
+{
+  //计算最短时间
+  int minT = 0;
+  for(int i = 0; i < n; i++)
+  {
+    minT = max(minT, min(x[i], L - x[i]));
+  }
+  
+  //计算最长时间
+  int maxT = 0;
+  for (int i = 0; i < n; i++)
+  {
+    maxT = max(maxT, max(x[i], L-x[i])); 
+  }
+  
+  printf("%d %d\n",maxT, minT);
+}
