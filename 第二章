@@ -1,0 +1,181 @@
+部分和问题(深度优先搜索)
+
+给定整数a1,a2,a3,...an,判断是否可以从中选出若干数，使他们的和刚好为K
+
+输入：
+n = 4
+a = {1,2,4,7}
+k = 13
+
+输出
+YES!
+
+输入:
+n = 4
+a = {1,2,4,7}
+k = 15
+
+输出
+NO!
+
+算法：
+//输入
+int a[MAX_N];
+int n, k;
+
+//已知从前i项和sum，然后对之后的进行分支
+bool dfs(int i, int sum)
+{
+  //如果全部计算过了，则返回是否与K相等
+  if (i == n)
+    return sum == k;
+  //不加上a[i]的情况
+  if(dfs(i + 1, sum))
+    return true;
+  //加上a[i]的情况
+  if (dfs(i + 1, sum + a[i]))
+    return true;
+  //无论加不加都不能凑成K
+    return false;
+}
+
+void solve()
+{
+  if (dfe(0, 0)) printf("YES!");
+  else printf("NO!");
+}
+
+
+
+
+POJ No.2386------Lake Counting（深度优先搜索）
+#include <stdio.h>
+#include <stdlib.h>
+
+int N = 10;
+int M = 12;
+char filed[10][12] =
+{
+    "w........ww.",
+    ".www.....www",
+    "....ww...ww.",
+    ".........ww.",
+    ".........w..",
+    "..w......w..",
+    ".w.w.....ww.",
+    "w.w.w.....w.",
+    ".w.w......w.",
+    "..w.......w."
+};
+
+void dfs(int x, int y)
+{
+    filed[x][y] = ".";
+
+    int dx;
+    int dy;
+    for(dx = -1; dx <= 1; dx++)
+    {
+        for(dy = -1; dy <= 1; dy++)
+        {
+            int nx = x + dx;
+            int ny = y + dy;
+            if (0 <= nx && nx < N && 0 <= ny && ny < M && filed[nx][ny] == 'w')
+                dfs(nx, ny);
+        }
+    }
+    return;
+}
+
+int main()
+{
+    int res = 0;
+    int i;
+    int j;
+    for(i = 0; i < N; i++)
+    {
+        for(j = 0; j < M ; j++)
+        {
+            if (filed[i][j] == 'w')
+            {
+                dfs(i,j);
+                res++;
+            }
+        }
+    }
+    printf("%d\n", res);
+
+    return 0;
+}
+
+
+
+
+迷宫最短路径（宽度优先搜索）
+给定一个大小为N*M的迷宫。迷宫由通道和墙壁组成，每一步可以向邻接的上下左右四格的通道移动。请求出从起点到终点所需的最小步数。
+请注意，本题默认从起点一定可以移动到终点。
+
+#include <stdio.h>
+#include <stdlib.h>
+
+const int INF = 100000000;
+
+typedef pair(int, int) P;
+
+//输入
+char maze[max_n][max_m + 1];    //表示迷宫字符串的数组
+int N,M;                        
+int sx, sy;                     //起点坐标
+int gx, gy;                     //终点坐标
+
+int d[max_n][max_m];           //到各个位置最短距离的数组
+
+//四个方向移动的向量
+int dx[4] = {1,0,-1,0};
+int dy[4] = {1,0,-1,0};
+
+//求最短距离
+//无法到达 则是INF
+int bfs()
+{
+    queue<P> que;
+    //把所有位置都初始化为INF
+    for(int i = 0; i < N; i++)
+    {
+        for(int j = 0; j < M; j++)
+        {
+            d[i][j] = INF;
+        }
+    }
+    
+    //将起点加入队列，并把这一地点的距离设为0
+    que.push(P(sx,sy));
+    d[sx][sy] = 0;
+    
+    //不断循环直到队列的长度为0
+    while(que.size())
+    {
+        //从队列前端取出元素
+        P p = que.front();
+        que.pop();
+        //如果去出来的状态已经是终点，则结束搜索
+        if (p.first == gx && p.second == gy)
+            break;
+        
+        for(int i = 0; i < 4; i++)
+        {
+            //移动之后的位置记为nx，ny
+            int nx = p.first + dx[i];
+            int ny = p.second + dy[i];
+            
+            //判断是否可以移动以及是否访问过（d[nx][ny]!=INF即为已经访问过）
+            if (0 <= nx && nx < N && 0 <= ny && ny < M && maze[nx][ny] != '#' && d[nx][ny] == INF)
+            {
+                //可以移动的话加入队列，并且到该位置的距离确定为到P的位置+1
+                que.push(P(nx, ny));
+                d[nx][ny] = d[p.first][p.second] + 1;
+            }
+        }
+    }
+    return d[nx][ny];
+}
