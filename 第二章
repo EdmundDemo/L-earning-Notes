@@ -179,3 +179,85 @@ int bfs()
     }
     return d[nx][ny];
 }
+
+
+贪心法——遵循某个规则，不断地选取当前最优策略的算法设计方案
+
+硬币问题
+有1元、5元、10元、50元、100元、500元的硬币个C1、C2、C3、C4、C5、C6枚。现在用这些硬币支付A元，最少需要多少硬币？
+
+输入
+C1 = 3、C2 = 2、C3 = 1、C4 = 3、C5 = 0、C6 = 2
+A = 600
+
+解法：
+const int V[6] = {1,5,10,50,100,500};
+
+//输入
+int C[6];
+int A;
+
+void slove()
+{
+  int ans = 0;
+  
+  for (int i = 5; i >= 0; i--)
+  {
+    int t = min(A / C[i], C[i]);
+    A -= t * V[i];
+    ans += t;
+  }
+  
+  printf("%d",ans);
+}
+
+贪心法——区间问题
+参与最多工作问题
+const int MAX_N = 10000;
+
+//输入
+int N, S[MAX_N], T[MAX_N];
+
+//用于对工作排序的pair数组
+pair<int, int> itv[MAX_N];
+
+
+void slove()
+{
+	//对pair进行的是字典序的比较
+	//为了让结束时间早的工作排在前面，把T存入first，S存入second
+	for(int i = 0; i < N; i++)
+	{
+		itv[i].first = T[i];
+		itv[i].seconf = S[i];
+	}
+
+	sort(itv, itv + N);
+
+	//t是最后所选工作的结束时间
+	int ans = 0, t = 0;
+	for(int i = 0; i < N; i++)
+	{
+		if(t < itv[i].second)
+		{
+			ans ++;
+			t = itv[i].first;
+		}
+	}
+
+	printf("%d",ans);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
